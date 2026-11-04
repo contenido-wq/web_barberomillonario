@@ -20,4 +20,34 @@ document.addEventListener('DOMContentLoaded', () => {
       document.body.style.overflow = '';
     });
   });
+
+  const servicesTrack = document.getElementById('servicesTrack');
+  const prevArrow = document.querySelector('.services__arrow--prev');
+  const nextArrow = document.querySelector('.services__arrow--next');
+
+  if (servicesTrack && prevArrow && nextArrow) {
+    const scrollStep = () => {
+      const card = servicesTrack.querySelector('.service-card');
+      const gap = parseFloat(getComputedStyle(servicesTrack).gap) || 24;
+      return card ? card.getBoundingClientRect().width + gap : 300;
+    };
+
+    prevArrow.addEventListener('click', () => {
+      servicesTrack.scrollBy({ left: -scrollStep(), behavior: 'smooth' });
+    });
+
+    nextArrow.addEventListener('click', () => {
+      servicesTrack.scrollBy({ left: scrollStep(), behavior: 'smooth' });
+    });
+
+    const updateArrows = () => {
+      const maxScroll = servicesTrack.scrollWidth - servicesTrack.clientWidth - 2;
+      prevArrow.classList.toggle('is-disabled', servicesTrack.scrollLeft <= 2);
+      nextArrow.classList.toggle('is-disabled', servicesTrack.scrollLeft >= maxScroll);
+    };
+
+    servicesTrack.addEventListener('scroll', updateArrows);
+    window.addEventListener('resize', updateArrows);
+    updateArrows();
+  }
 });
